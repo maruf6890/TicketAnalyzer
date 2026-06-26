@@ -113,6 +113,7 @@ class AnalyzeTicketResponse(BaseModel):
     evidence_verdict: EvidenceVerdict = Field(
         ...,
         description=(
+            "if the  transaction history is provided, check the complaint against the transaction  history and try to understand then decide the relationship then decide the verdict. "
             "Relationship between the complaint and transaction history. "
             "'consistent' when history supports the complaint, "
             "'inconsistent' when history contradicts it, "

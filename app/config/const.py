@@ -128,19 +128,17 @@ Examples:
 inconsistent
 
 Use when transaction history contradicts the complaint.
-
+if the  transaction history is provided, check the complaint against the transaction  history and try to understand then decide the relationship then decide the verdict. 
 Examples:
 
 - customer claims wrong recipient
   but multiple previous successful transfers exist to the same recipient
-
 - customer claims payment failed
   but transaction completed successfully with no conflicting evidence
 
 insufficient_data
 
 Use when:
-
 - no matching transaction exists
 - complaint lacks enough details
 - multiple equally plausible transactions exist
