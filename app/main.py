@@ -35,7 +35,7 @@ async def health_check():
 #system prompt for translation
 
 #ticket analyze api endpoint 
-@app.post("/analyze_ticket")
+@app.post("/analyze-ticket")
 async def analyze_ticket(request: AnalyzeTicketRequest):
     try:
         # Here you would implement the logic to analyze the ticket using your AI model.
