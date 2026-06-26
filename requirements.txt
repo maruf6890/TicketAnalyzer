@@ -6,3 +6,4 @@ pydantic
 pydantic-settings
 google-genai
 loguru
+Pillow

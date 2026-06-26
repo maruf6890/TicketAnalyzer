@@ -1,0 +1,32 @@
+# Git / VCS
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+**/__pycache__
+*.py[cod]
+*$py.class
+*.so
+.venv
+venv
+env
+.envrc
+
+# IDE / editor
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Project artefacts
+*.log
+logs
+*.bat
+*.md
+!readme.md
