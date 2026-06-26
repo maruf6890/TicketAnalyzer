@@ -2,6 +2,14 @@
 
 TicketAnalyzer is a FastAPI service that analyzes customer complaints together with transaction history and returns a structured AI-assisted case summary. It can translate non-English complaints before analysis and uses Gemini to produce the final response.
 
+## The Pitch (video  on project architectural overview)
+
+https://drive.google.com/drive/folders/1xvAqBzVRgudgvBxGf0q1GDv8A3WmOQY8?usp=drive_link
+
+## Live API Endpoint
+
+https://ticketanalyzer-2iph.onrender.com/
+
 ## Features
 
 - `POST /analyze_ticket` for structured ticket analysis
