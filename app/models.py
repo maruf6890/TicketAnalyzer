@@ -91,21 +91,149 @@ class AnalyzeTicketRequest(BaseModel):
 # -------------------------------------------------------------------
 # RESPONSE MODEL
 # -------------------------------------------------------------------
-
 class AnalyzeTicketResponse(BaseModel):
-    ticket_id: str = Field(..., example="TKT-001")
-    relevant_transaction_id: Optional[str] = Field(
-        ..., 
-        description="Transaction ID the complaint refers to, or null if none matches.", 
-        example="TXN-9101"
+    ticket_id: str = Field(
+        ...,
+        description="Echo the input ticket ID exactly as received.",
+        example="TKT-001",
     )
-    evidence_verdict: EvidenceVerdict = Field(..., example="consistent")
-    case_type: CaseType = Field(..., example="wrong_transfer")
-    severity: Severity = Field(..., example="high")
-    department: Department = Field(..., example="dispute_resolution")
-    agent_summary: str = Field(..., description="Concise agent ready summary", example="Customer reports sending 5000 BDT to the wrong number...")
-    recommended_next_action: str = Field(..., example="Verify TXN-9101 details with the customer...")
-    customer_reply: str = Field(..., description="Safe official reply respecting safety rules", example="We have noted your concern about transaction TXN-9101...")
-    human_review_required: bool = Field(..., example=True)
-    confidence: Optional[float] = Field(None, ge=0.0, le=1.0, example=0.95)
-    reason_codes: Optional[List[str]] = Field(None, example=["wrong_transfer", "transaction_match"])
+
+    relevant_transaction_id: Optional[str] = Field(
+        ...,
+        description=(
+            "Transaction ID that best matches the customer's complaint. "
+            "Choose the single strongest match using amount, transaction type, "
+            "timestamp, counterparty, status, and complaint details. "
+            "Return null if no reasonable match exists or if multiple transactions "
+            "are equally plausible. Never guess."
+        ),
+        example="TXN-9101",
+    )
+
+    evidence_verdict: EvidenceVerdict = Field(
+        ...,
+        description=(
+            "Relationship between the complaint and transaction history. "
+            "'consistent' when history supports the complaint, "
+            "'inconsistent' when history contradicts it, "
+            "and 'insufficient_data' when there is not enough information "
+            "or no unique matching transaction."
+        ),
+        example="consistent",
+    )
+
+    case_type: CaseType = Field(
+        ...,
+        description=(
+            "Primary classification of the customer's issue. "
+            "Choose the single most appropriate category based on the complaint "
+            "and supporting transaction evidence."
+        ),
+        example="wrong_transfer",
+    )
+
+    severity: Severity = Field(
+        ...,
+        description=(
+            "Operational priority of the case. "
+            "Use 'low' for informational or vague issues, "
+            "'medium' for operational issues with limited financial risk, "
+            "'high' for financial disputes such as wrong transfers, duplicate "
+            "payments or failed payments, and "
+            "'critical' for phishing, fraud, unauthorized activity or major "
+            "security risks."
+        ),
+        example="high",
+    )
+
+    department: Department = Field(
+        ...,
+        description=(
+            "Internal team responsible for handling the case. "
+            "Select the department that best matches the identified case type "
+            "and operational workflow."
+        ),
+        example="dispute_resolution",
+    )
+
+    agent_summary: str = Field(
+        ...,
+        description=(
+            "A concise factual summary for internal agents. "
+            "Summarize the complaint, relevant transaction (if any), "
+            "key evidence, and important observations. "
+            "Do not speculate or include unsupported assumptions."
+        ),
+        example=(
+            "Customer reports sending 5000 BDT to the wrong recipient. "
+            "Transaction TXN-9101 matches the complaint."
+        ),
+    )
+
+    recommended_next_action: str = Field(
+        ...,
+        description=(
+            "Recommended operational action for the internal support team. "
+            "Suggest the next investigation or workflow step without approving "
+            "refunds, reversals, or other unauthorized actions."
+        ),
+        example="Verify TXN-9101 and initiate the wrong-transfer dispute workflow.",
+    )
+
+    customer_reply: str = Field(
+        ...,
+        description=(
+            "Safe, customer-facing response. "
+            "Acknowledge the complaint, explain that the issue will be reviewed, "
+            "avoid promising refunds or guaranteed outcomes, "
+            "never request PIN, OTP, passwords or sensitive credentials, "
+            "and direct the customer to official support channels."
+        ),
+        example=(
+            "We have received your request regarding transaction TXN-9101. "
+            "Our team will review the matter and contact you through official "
+            "support channels. Please never share your PIN or OTP with anyone."
+        ),
+    )
+
+    human_review_required: bool = Field(
+        ...,
+        description=(
+            "Whether manual investigation by a human agent is required. "
+            "Set to true for fraud, phishing, disputes, inconsistent evidence, "
+            "wrong transfers, duplicate payments, pending cash-in issues, "
+            "high/critical severity, or any case requiring manual validation. "
+            "Otherwise return false."
+        ),
+        example=True,
+    )
+
+    confidence: Optional[float] = Field(
+        None,
+        ge=0.0,
+        le=1.0,
+        description=(
+            "Overall confidence in the analysis from 0.0 to 1.0. "
+            "Use higher values when transaction matching and evidence are clear. "
+            "Reduce confidence when evidence is conflicting, ambiguous, "
+            "or insufficient."
+        ),
+        example=0.92,
+    )
+
+    reason_codes: Optional[List[str]] = Field(
+        None,
+        description=(
+            "Short machine-readable labels explaining why the decision was made. "
+            "Include only the most relevant reasons, such as "
+            "'transaction_match', 'duplicate_payment', "
+            "'established_recipient_pattern', 'ambiguous_match', "
+            "'payment_failed', 'fraud_risk', or 'needs_clarification'."
+        ),
+        example=[
+            "wrong_transfer",
+            "transaction_match",
+            "dispute_initiated",
+        ],
+    )
+

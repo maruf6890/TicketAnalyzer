@@ -54,7 +54,7 @@ async def analyze_ticket(request: AnalyzeTicketRequest):
                 target_language="en",
                 system_prompt="You are a helpful assistant. Translate the following text to English.User may be enter mix of english and other language. Please translate the text to english. If the text is already in english, please return the same text.",
                 user_prompt="Translate the following text to English}",
-                model="gemini-2.5-flash",
+                model="gemini-3.5-flash",
                 api_key=os.environ.get("GOOGLE_API_KEY")
             )
             logger.info(f"Translated complaint: {translated_complaint}")
